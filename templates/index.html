@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Weather api</title>
+
+        <link href={{ url_for('static', filename='css/index.css') }} rel="stylesheet" type="text/css" />
+
+    </head>
+    <body>
+        
+        <h1>Weather api</h1>
+
+        <form action="/api/weather" method="get">
+          <label for="year">Filter by year:</label>
+
+            <select name="year">
+              <option value="">Year</option>
+              {% for year in range(1985, 2015) %}
+                <option id="year" value="{{ year }}">{{ year }}</option>
+              {% endfor %}
+            </select>
+
+          <button type="submit">Filter</button>
+        </form>
+
+        <table id="data-table">
+          <thead>
+            <tr>
+                <th>Year</th>
+                <th>Max Temperarute</th>
+                <th>Min Temperature</th>
+                <th>Precipitation</th>
+            </tr>
+
+            <tr>
+                {% for datum in data %}
+
+                    <tr>
+                        <td>{{ datum[1] }}</td>
+                        <td>{{ datum[2] }}</td>
+                        <td>{{ datum[3] }}</td>
+                        <td>{{ datum[4] }}</td>
+                    </tr>
+
+                {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+        
+
+        <form id="form" action="/api/weather" method="post">
+
+            <select name="state">
+
+              <option value="">State</option>
+              {% for state in states %}
+                <option id="state" value="{{ state }}">{{ state }}</option>
+              {% endfor %}
+
+            </select>
+
+            <input type="submit" value="Submit">
+        </form>
+
+        <p>This is the data for {{ state }} state</p>
+
+        <div class="pagination">
+          {% if pagination.has_prev %}
+            <a href="?page={{ pagination.prev_num }}">previous</a>
+          {% endif %}
+
+          {% for page in range(0,10) %}
+            {% if page %}
+              {% if page != pagination.page %}
+                <a href="?page={{ page }}">{{ page }}</a>
+              {% else %}
+                <span class="current">{{ page }}</span>
+              {% endif %}
+            {% else %}
+              <span class="ellipsis">...</span>
+            {% endif %}
+          {% endfor %}
+
+          {% if pagination.has_next %}
+            <a href="?page={{ pagination.next_num }}">next</a>
+          {% endif %}
+        </div>
+
+    </body>
+</html>
